@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
 use App\Http\Resources\UserResource;
+use App\Http\Requests\Employee\StoreEmployeeRequest;
 
 class EmployeesController extends Controller
 {
@@ -14,5 +15,10 @@ class EmployeesController extends Controller
         return UserResource::collection(
             User::role('employee')->get()
         );
+    }
+
+    public function store(StoreEmployeeRequest $request)
+    {
+        
     }
 }
