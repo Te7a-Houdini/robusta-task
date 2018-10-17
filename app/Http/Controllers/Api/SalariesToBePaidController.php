@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Carbon\CarbonPeriod;
 use App\User;
+use Illuminate\Support\Carbon;
 
 class SalariesToBePaidController extends Controller
 {
@@ -21,15 +22,23 @@ class SalariesToBePaidController extends Controller
         return $period->map(function($firstOfMonth) use ($summedSalaries,$summedBonuses) {
             
             $salaryPayDay = $firstOfMonth->lastOfMonth();
-
+            $bonusPayDay = Carbon::parse('15th '. $firstOfMonth->format('M'));
+             
+            
             if($this->isWeekend($salaryPayDay))
             {
-                $salaryPayDay = $this->lastDayBeforeWeekend($salaryPayDay);
+                $salaryPayDay = $salaryPayDay->previous(Carbon::THURSDAY);
+            }
+
+            if($this->isWeekend($bonusPayDay))
+            {
+                $bonusPayDay = $bonusPayDay->next(Carbon::THURSDAY);
             }
 
             return [
                 'Month' => $firstOfMonth->format('M'),
                 'Salaries_payment_day' => $salaryPayDay->format('d'),
+                'Bonus_payment_d' => $bonusPayDay->format('d'),
                 'salaries_total' =>  $summedSalaries,
                 'bonus_total' => $summedBonuses,
                 'payments_total' => $summedBonuses + $summedSalaries
@@ -43,13 +52,4 @@ class SalariesToBePaidController extends Controller
         return in_array($carbonDay->format('l'),['Saturday','Friday']);
     }
 
-    private function lastDayBeforeWeekend($weekendDay)
-    {
-        if($weekendDay->format('l') == 'Saturday')
-        {
-            return $weekendDay->subDays(2);
-        }
-
-        return $weekendDay->subDay();
-    }
 }
