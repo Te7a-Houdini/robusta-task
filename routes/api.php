@@ -19,5 +19,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::group(['namespace' => 'Api'],function(){
     Route::get('employees','EmployeesController@index');
+    Route::put('employees/{id}/bonus-percentage','EmployeeBonusPercentageController@update');
     Route::get('salaries-to-be-paid','SalariesToBePaidController@index');
 });
