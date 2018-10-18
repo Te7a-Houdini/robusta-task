@@ -19,6 +19,8 @@ class EmployeesController extends Controller
 
     public function store(StoreEmployeeRequest $request)
     {
-        
+        $user = User::create($request->all());
+
+        return new UserResource($user);
     }
 }

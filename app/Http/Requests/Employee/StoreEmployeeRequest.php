@@ -9,7 +9,7 @@ class StoreEmployeeRequest extends BaseEmployeeRequest
     public function additionalRules() :array
     {
         return [
-            'email' => 'required|unique',
+            'email' => 'required|unique:users',
             'password' => 'required|string|min:6|confirmed'
         ];
     }
