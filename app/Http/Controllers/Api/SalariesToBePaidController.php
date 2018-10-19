@@ -14,6 +14,7 @@ class SalariesToBePaidController extends Controller
 {
     public function index(Request $request)
     {
+        AdminSalariesPaymentReminder::dispatch();
         $request->validate(['filter' => 'array']);
 
         $salaries = User::employeeSalariesAndBonuses();
@@ -33,8 +34,8 @@ class SalariesToBePaidController extends Controller
         return function ($firstOfMonth) use ($summedSalaries, $summedBonuses) {
             return [
                 'Month' => $firstOfMonth->format('M'),
-                'Salaries_payment_day' => SalaryPaymentCalculator::salaryPayDay($firstOfMonth->lastOfMonth())->format('d'),
-                'Bonus_payment_day' => SalaryPaymentCalculator::bonusPayDay(Carbon::parse('15th ' . $firstOfMonth->format('M')))->format('d'),
+                'Salaries_payment_day' => SalaryPaymentCalculator::salaryPayDay($firstOfMonth)->format('d'),
+                'Bonus_payment_day' => SalaryPaymentCalculator::bonusPayDay($firstOfMonth)->format('d'),
                 'salaries_total' => $summedSalaries,
                 'bonus_total' => $summedBonuses,
                 'payments_total' => $summedBonuses + $summedSalaries

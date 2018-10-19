@@ -6,8 +6,10 @@ use Illuminate\Support\Carbon;
 
 class SalaryPaymentCalculator
 {
-    public static function salaryPayDay($lastDayInMonth)
+    public static function salaryPayDay($carbonInstance)
     {
+        $lastDayInMonth = $carbonInstance->lastOfMonth();
+
         if (static::isWeekend($lastDayInMonth)) {
             return $lastDayInMonth->previous(Carbon::THURSDAY);
         }
@@ -15,8 +17,10 @@ class SalaryPaymentCalculator
         return $lastDayInMonth;
     }
 
-    public static function bonusPayDay($middleOfMonth)
+    public static function bonusPayDay($carbonInstance)
     {
+        $middleOfMonth = Carbon::parse('15th ' . $carbonInstance->format('M'));
+        
         if (static::isWeekend($middleOfMonth)) {
             return $middleOfMonth->next(Carbon::THURSDAY);
         }
