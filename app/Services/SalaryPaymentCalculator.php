@@ -6,7 +6,7 @@ use Illuminate\Support\Carbon;
 
 class SalaryPaymentCalculator
 {
-    public static function salaryPayDay($carbonInstance)
+    public static function salaryPayDay(Carbon $carbonInstance)
     {
         $lastDayInMonth = $carbonInstance->lastOfMonth();
 
@@ -17,7 +17,7 @@ class SalaryPaymentCalculator
         return $lastDayInMonth;
     }
 
-    public static function bonusPayDay($carbonInstance)
+    public static function bonusPayDay(Carbon $carbonInstance)
     {
         $middleOfMonth = Carbon::parse('15th ' . $carbonInstance->format('M'));
         
