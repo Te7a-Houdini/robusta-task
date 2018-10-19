@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use Carbon\CarbonPeriod;
 use App\User;
 use Illuminate\Support\Carbon;
+use App\Jobs\AdminSalariesPaymentReminder;
+use App\Services\SalaryPaymentCalculator;
 
 class SalariesToBePaidController extends Controller
 {
@@ -31,36 +33,13 @@ class SalariesToBePaidController extends Controller
         return function ($firstOfMonth) use ($summedSalaries, $summedBonuses) {
             return [
                 'Month' => $firstOfMonth->format('M'),
-                'Salaries_payment_day' => $this->salaryPayDay($firstOfMonth->lastOfMonth())->format('d'),
-                'Bonus_payment_day' => $this->bonusPayDay(Carbon::parse('15th ' . $firstOfMonth->format('M')))->format('d'),
+                'Salaries_payment_day' => SalaryPaymentCalculator::salaryPayDay($firstOfMonth->lastOfMonth())->format('d'),
+                'Bonus_payment_day' => SalaryPaymentCalculator::bonusPayDay(Carbon::parse('15th ' . $firstOfMonth->format('M')))->format('d'),
                 'salaries_total' => $summedSalaries,
                 'bonus_total' => $summedBonuses,
                 'payments_total' => $summedBonuses + $summedSalaries
             ];
         };
-    }
-
-    private function salaryPayDay($lastDayInMonth)
-    {
-        if ($this->isWeekend($lastDayInMonth)) {
-            return $lastDayInMonth->previous(Carbon::THURSDAY);
-        }
-
-        return $lastDayInMonth;
-    }
-
-    private function bonusPayDay($middleOfMonth)
-    {
-        if ($this->isWeekend($middleOfMonth)) {
-            return $middleOfMonth->next(Carbon::THURSDAY);
-        }
-
-        return $middleOfMonth;
-    }
-
-    private function isWeekend($carbonDay)
-    {
-        return in_array($carbonDay->format('l'), ['Saturday', 'Friday']);
     }
 
     private function filterByMonth()
