@@ -17,7 +17,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['namespace' => 'Api'],function(){
+Route::group(['namespace' => 'Api','middleware' => ['role:admin']],function(){
     Route::get('employees','EmployeesController@index');
     Route::post('employees','EmployeesController@store');
 
