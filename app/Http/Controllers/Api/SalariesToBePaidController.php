@@ -14,7 +14,6 @@ class SalariesToBePaidController extends Controller
 {
     public function index(Request $request)
     {
-        AdminSalariesPaymentReminder::dispatch();
         $request->validate(['filter' => 'array']);
 
         $salaries = User::employeeSalariesAndBonuses();
